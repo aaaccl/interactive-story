@@ -4,13 +4,263 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Story</title>
-    <link rel="stylesheet" href="style.css"> <!-- 引用 CSS 样式 -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
+
     <div id="app">
-        <!-- 这里将由 ScenePage.js 渲染内容 -->
+        <!-- Content will be rendered here by JavaScript -->
     </div>
 
-    <script src="ScenePage.js"></script> <!-- 引用 JavaScript 文件 -->
+    <script>
+        // Your scenes data
+        const scenes = {
+            s1: {
+                text: "Rose proposed creating an anonymous message wall during Mental Health Week.",
+                choices: [
+                    { label: "Jack agreed to film.", next: "s1_a" },
+                    { label: "Jack decided to observe silently.", next: "s1_b" },
+                    { label: "Jack ignored the idea.", next: "s1_c" }
+                ]
+            },
+            s1_a: {
+                text: "Jack filmed in front of the wall but Rose rejected him.",
+                choices: [
+                    { label: "He decided to upload the video anonymously.", next: "s1_a1" },
+                    { label: "He deleted the video and wrote: I'm willing to relearn to listen", next: "s6" }
+                ]
+            },
+            s1_a1: {
+                text: "Jack anonymously posted the video. It went viral and sparked controversy.",
+                choices: [
+                    { label: "Jack continued releasing edited clips", next: "s7" },
+                    { label: "Jack deleted it and apologized", next: "s10" },
+                    { label: "Jack wrote: I'm willing to relearn to listen", next: "s6" },
+                    { label: "Jack messaged Rose privately", next: "s1_a1_b2" }
+                ]
+            },
+            s1_a1_b2: {
+                text: "Jack apologized to Rose privately. They reflected on boundaries.",
+                choices: [
+                    { label: "Rose said: 'Some emotions aren't for publication.'", next: "s14" }
+                ]
+            },
+            s1_b: {
+                text: "Jack observed from a distance and noticed a mysterious figure, Lorre.",
+                choices: [
+                    { label: "Jack mimicked Lorre's posture in psychoanalysis videos.", next: "s1_b1" },
+                    { label: "Jack avoided her and focused on the wall.", next: "s1_b2" }
+                ]
+            },
+            s1_b1: {
+                text: "Jack's videos gained traction. He said: I hear you and myself too.",
+                choices: [
+                    { label: "He continued posting.", next: "s14" }
+                ]
+            },
+            s1_b2: {
+                text: "Jack noticed emotional notes disappearing silently.",
+                choices: [
+                    { label: "He decided to investigate.", next: "e3" }
+                ]
+            },
+            s1_c: {
+                text: "The school launched an Emotional Safety Integration Policy grading messages.",
+                choices: [
+                    { label: "Jack contacted Rose.", next: "s1_c1" },
+                    { label: "Jack remained uninvolved.", next: "bad" },
+                    { label: "Jack hesitated.", next: "s1_c2" }
+                ]
+            },
+            s1_c1: {
+                text: "Jack and Rose opposed the policy together.",
+                choices: [
+                    { label: "They wrote a joint post.", next: "s14" }
+                ]
+            },
+            s1_c2: {
+                text: "Jack considered anonymous resistance or silence.",
+                choices: [
+                    { label: "He posted anonymously.", next: "s14" },
+                    { label: "He stayed silent.", next: "bad" }
+                ]
+            },
+            s6: {
+                text: "Rose discovered emotional expressions were being removed.",
+                choices: [
+                    { label: "She reminded everyone that expression can vanish", next: "s14" },
+                    { label: "She posted: Which emotion isn't worth keeping?", next: "s14" },
+                    { label: "She recorded all the deleted notes", next: "s6_alt" }
+                ]
+            },
+            s6_alt: {
+                text: "Rose showed the removals at an assembly.",
+                choices: [
+                    { label: "Audience applauded.", next: "s15" },
+                    { label: "Some called her manipulative.", next: "s9" }
+                ]
+            },
+            s7: {
+                text: "Jack edited clips to mislead the public about Rose.",
+                choices: [
+                    { label: "Rose wrote a long article.", next: "s8" },
+                    { label: "Rose stayed silent.", next: "s9" },
+                    { label: "Rose confronted Jack.", next: "s7_alt" }
+                ]
+            },
+            s7_alt: {
+                text: "Rose asked: 'Is this your truth or your edit?'",
+                choices: [
+                    { label: "Jack said: 'Both.'", next: "s8" },
+                    { label: "Jack remained silent.", next: "s9" }
+                ]
+            },
+            s8: {
+                text: "Online users questioned Rose's legitimacy.",
+                choices: [
+                    { label: "Jun posted a resonating painting.", next: "s14" }
+                ]
+            },
+            s9: {
+                text: "Jun anonymously posted artwork, noticed by Rose and Jack.",
+                choices: [
+                    { label: "Jun posted again.", next: "s14" },
+                    { label: "Jun tore up the artwork.", next: "bad" }
+                ]
+            },
+            s10: {
+                text: "Jack received an anonymous note: Some people sell silence.",
+                choices: [
+                    { label: "He investigated the cameras.", next: "e3" },
+                    { label: "He replied: I hear you and myself too.", next: "s14" },
+                    { label: "He reflected more deeply.", next: "s10_b" }
+                ]
+            },
+            s10_b: {
+                text: "Jack read another note: Silence is never neutral.",
+                choices: [
+                    { label: "He released full recordings.", next: "e2" },
+                    { label: "He returned to the wall.", next: "s13" }
+                ]
+            },
+            e1_b: {
+                text: "A debate started: Does anonymous expression amplify or distort?",
+                choices: [
+                    { label: "Jack released raw footage.", next: "e2" },
+                    { label: "He stopped posting.", next: "s13" }
+                ]
+            },
+            e2: {
+                text: "School introduced surveillance updates. Some protested.",
+                choices: [
+                    { label: "Rose protested.", next: "s14" },
+                    { label: "Jun created resistance artwork.", next: "s14" }
+                ]
+            },
+            e3: {
+                text: "Jack discovered the wall was monitored.",
+                choices: [
+                    { label: "He stopped publishing.", next: "s13" },
+                    { label: "He posted: 'I'll listen, will you speak?'", next: "s14" }
+                ]
+            },
+            s13: {
+                text: "Rose sat at the wall: You don’t need to speak, but I’ll listen.",
+                choices: [
+                    { label: "She closed comments.", next: "original" },
+                    { label: "She placed a recorder.", next: "s14" }
+                ]
+            },
+            s14: {
+                text: "The mood turned to collective listening.",
+                choices: [
+                    { label: "Go to the closing ceremony.", next: "s15" }
+                ]
+            },
+            s15: {
+                text: "Rose shared her experience. Jack did not record again.",
+                choices: [
+                    { label: "End.", next: "good" }
+                ]
+            },
+            good: {
+                text: "The wall became a space for emotional expression.",
+                choices: [ { label: "Restart", next: "s1" } ]
+            },
+            bad: {
+                text: "The school dismantled the wall; expression was suppressed.",
+                choices: [ { label: "Restart", next: "s1" } ]
+            },
+            original: {
+                text: "Rose shared her original intent. Jack didn’t press record.",
+                choices: [ { label: "Restart", next: "s1" } ]
+            }
+        };
+
+        let sceneId = "s1"; // Initial scene
+
+        function renderScene() {
+            const scene = scenes[sceneId];
+            const appElement = document.getElementById("app");
+            appElement.innerHTML = `
+                <h1>${scene.text}</h1>
+                <div id="choices"></div>
+            `;
+
+            const choicesContainer = document.getElementById("choices");
+
+            scene.choices.forEach(choice => {
+                const button = document.createElement("button");
+                button.textContent = choice.label;
+                button.onclick = () => {
+                    sceneId = choice.next; // Change to the next scene
+                    renderScene(); // Re-render the scene
+                };
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        // Initial render
+        renderScene();
+    </script>
+
 </body>
 </html>
